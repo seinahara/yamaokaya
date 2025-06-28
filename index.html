@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ランダム山岡屋メニュー</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="hamburger" id="menuToggle" onclick="toggleMenu()">☰</div>
+    <div class="navbar-brand">山岡屋メニュー決めるよ!</div>
+  </nav>
+    <ul id="navLinks" class="nav-links">
+      <li><a href="https://www.yamaokaya.com/" target="_blank">山岡家公式サイト</a></li>
+      <li><a href="https://www.youtube.com/channel/UCqG9QYYO7tu3kE5CDdXGltA" target="_blank">YouTube</a></li>
+      <li><a href="https://www.yamaokaya.com/shopapp/" target="_blank">スマホアプリ</a></li>
+    </ul>
+  <header >
+    <h1>🍜 予算を入力してね</h1>
+  </header>
+    
+
+  <main class="container">
+    <label for="budget">予算を入力（円）:</label>
+    <input type="number" id="budget" placeholder="例: 1200" min="0">
+
+    <button onclick="generateMenu()">メニューを決定</button>
+
+    <div class="result" id="resultArea"></div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
