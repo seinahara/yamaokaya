@@ -57,60 +57,56 @@ function generateMenu() {
   let rem = budget;
   const result = [];
 
-  // 1. 🍜 ラーメン（1つ選ぶまでループ）
-  const ramenChoices = [...ramen].sort(() => 0.5 - Math.random());
-  let ramenChoice = null;
-  for (let r of ramenChoices) {
-    if (r.price <= rem) {
-      ramenChoice = r;
-      break;
+  // メニュー選択用コピー（毎回シャッフルする）
+  let ramenPool = [...ramen];
+  let sidePool = [...sides];
+  let toppingPool = [...toppings];
+
+  // ループで選び続ける
+  let somethingAdded = true;
+  while (rem > 0 && somethingAdded) {
+    somethingAdded = false;
+
+    // 🍜 ラーメン（1つ選ぶ）
+    ramenPool = ramenPool.sort(() => 0.5 - Math.random());
+    for (let r of ramenPool) {
+      if (r.price <= rem) {
+        result.push(r);
+        rem -= r.price;
+        somethingAdded = true;
+        break;
+      }
+    }
+
+    // 🍚 サイド（1つ選ぶ）
+    sidePool = sidePool.sort(() => 0.5 - Math.random());
+    for (let s of sidePool) {
+      if (s.price <= rem) {
+        result.push(s);
+        rem -= s.price;
+        somethingAdded = true;
+        break;
+      }
+    }
+
+    // 🧂 トッピング（複数OK）
+    toppingPool = toppingPool.sort(() => 0.5 - Math.random());
+    for (let t of toppingPool) {
+      if (t.price <= rem) {
+        result.push(t);
+        rem -= t.price;
+        somethingAdded = true;
+        break; // 1個ずつ追加（たくさん回すため）
+      }
     }
   }
 
-  if (ramenChoice) {
-    result.push(ramenChoice);
-    rem -= ramenChoice.price;
-  }
-
-  // 2. 🍚 サイド（1つ選ぶまでループ）
-  const sideChoices = [...sides].sort(() => 0.5 - Math.random());
-  let sideChoice = null;
-  for (let s of sideChoices) {
-    if (s.price <= rem) {
-      sideChoice = s;
-      break;
-    }
-  }
-
-  if (!ramenChoice && sideChoice) {
-    // ラーメン選べなかった場合のみサイドを追加
-    result.push(sideChoice);
-    rem -= sideChoice.price;
-  } else if (sideChoice) {
-    // ラーメン選べてサイドも選べた場合は追加OK
-    result.push(sideChoice);
-    rem -= sideChoice.price;
-  }
-
-  // 3. 🧂 トッピング（複数選べるだけ選ぶ）
-  const toppingChoices = [...toppings].sort(() => 0.5 - Math.random());
-  let toppingAdded = false;
-  toppingChoices.forEach(t => {
-    if (t.price <= rem) {
-      result.push(t);
-      rem -= t.price;
-      toppingAdded = true;
-    }
-  });
-
-  // 条件判定：何も選べなかった場合
-  if (!ramenChoice && !sideChoice && !toppingAdded) {
+  if (result.length === 0) {
     out.textContent = "😢 予算で選べるメニューがありません";
     return;
   }
 
   const used = budget - rem;
-
   out.innerHTML = `
     <div>
       <strong>🎯 結果（予算: ${budget}円）</strong>
@@ -119,6 +115,7 @@ function generateMenu() {
     </div>
   `;
 }
+
 
 
 function toggleMenu() {
@@ -143,3 +140,32 @@ document.addEventListener('click', function (event) {
     hamburger.textContent = '☰';
   }
 });
+  document.getElementById("openYamaokayaApp").addEventListener("click", function (e) {
+    e.preventDefault(); // リンクの通常動作を無効化
+
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isiOS = /iphone|ipad|ipod/.test(userAgent);
+    const isAndroid = /android/.test(userAgent);
+
+    const appStoreURL = "https://apps.apple.com/jp/app/id6466559589";
+    const playStoreURL = "https://play.google.com/store/apps/details?id=com.yamaokaya"; // ※実在する場合に修正
+    const fallbackURL = "https://www.yamaokaya.com/shopapp/"; // PCやその他用
+
+    if (isiOS) {
+      // iOSならアプリスキーム試行（未対応ならApp Storeへ）
+      const scheme = "yamaokaya://"; // カスタムスキーム（未確認の仮定）
+      window.location = scheme;
+
+      setTimeout(() => {
+        window.location = appStoreURL;
+      }, 2000);
+    } else if (isAndroid) {
+      // AndroidならPlayストアへ（※存在しない場合 fallback）
+      window.location = playStoreURL;
+    } else {
+      // その他（PC等）
+      window.location = fallbackURL;
+    }
+  });
+
+
