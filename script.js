@@ -139,33 +139,6 @@ document.addEventListener('click', function (event) {
     document.body.classList.remove('menu-open');
     hamburger.textContent = '☰';
   }
-});
-  document.getElementById("openYamaokayaApp").addEventListener("click", function (e) {
-    e.preventDefault(); // リンクの通常動作を無効化
-
-    const userAgent = navigator.userAgent.toLowerCase();
-    const isiOS = /iphone|ipad|ipod/.test(userAgent);
-    const isAndroid = /android/.test(userAgent);
-
-    const appStoreURL = "https://apps.apple.com/jp/app/id6466559589";
-    const playStoreURL = "https://play.google.com/store/apps/details?id=com.yamaokaya"; // ※実在する場合に修正
-    const fallbackURL = "https://www.yamaokaya.com/shopapp/"; // PCやその他用
-
-    if (isiOS) {
-      // iOSならアプリスキーム試行（未対応ならApp Storeへ）
-      const scheme = "yamaokaya://"; // カスタムスキーム（未確認の仮定）
-      window.location = scheme;
-
-      setTimeout(() => {
-        window.location = appStoreURL;
-      }, 2000);
-    } else if (isAndroid) {
-      // AndroidならPlayストアへ（※存在しない場合 fallback）
-      window.location = playStoreURL;
-    } else {
-      // その他（PC等）
-      window.location = fallbackURL;
-    }
-  });
+});   
 
 
